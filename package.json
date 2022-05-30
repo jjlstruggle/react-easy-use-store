@@ -1,0 +1,54 @@
+{
+  "name": "react-easy-use-store",
+  "version": "0.0.1",
+  "description": "A small and fast library for managing react state",
+  "keywords": [
+    "react",
+    "reactjs",
+    "redux",
+    "状态管理",
+    "store"
+  ],
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "unpkg": "dist/react-redux.js",
+  "module": "es/index.js",
+  "homepage": "https://github.com/jjlstruggle/react-easy-use-store.git",
+  "repository": "https://github.com/jjlstruggle/react-easy-use-store.git",
+  "files": [
+    "dist",
+    "lib",
+    "package",
+    "es"
+  ],
+  "scripts": {
+    "build:commonjs": "cross-env BABEL_ENV=commonjs babel package --extensions \".js,.jsx\" --out-dir lib",
+    "build:es": "babel package --extensions \".js,.jsx\" --out-dir es",
+    "build:umd": "cross-env NODE_ENV=development rollup -c -o dist/react-easy-use-store.js",
+    "build:umd:min": "cross-env NODE_ENV=production rollup -c -o dist/react-easy-use-store.min.js",
+    "build": "pnpm build:commonjs && pnpm build:es && pnpm build:umd && pnpm build:umd:min"
+  },
+  "author": "saga",
+  "devDependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.17.12",
+    "@babel/plugin-transform-react-jsx": "^7.17.12",
+    "@babel/plugin-transform-runtime": "^7.17.12",
+    "@babel/preset-env": "^7.17.12",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "rollup": "^2.73.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "peerDependencies": {
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.17.9"
+  }
+}
