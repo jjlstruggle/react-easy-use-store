@@ -8,24 +8,23 @@
 
     var React__default = /*#__PURE__*/_interopDefaultLegacy(React$1);
 
+    const notifyProviderUpdate = () => {};
+
+    store = {};
+
+    const setStore = (key, data) => {
+      store;
+      Object.assign(store, {
+        [key]: data
+      });
+    };
+
+    const getState = () => store;
+
     function createStore() {
-      store = {};
-
-      const notifyProviderUpdate = () => {};
-
-      const setStore = (key, data) => {
-        store;
-        Object.assign(store, {
-          [key]: data
-        });
-      };
-
-      const getState = () => store;
-
       return {
         setStore,
         getState,
-        addSubscribe,
         notifyProviderUpdate
       };
     }
@@ -179,6 +178,7 @@
     exports.Provider = Provider;
     exports.connect = connect;
     exports.createStore = createStore;
+    exports.setStore = setStore;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
