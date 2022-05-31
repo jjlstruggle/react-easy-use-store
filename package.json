@@ -1,6 +1,6 @@
 {
   "name": "react-easy-use-store",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "A small and fast library for managing react state",
   "keywords": [
     "react",
