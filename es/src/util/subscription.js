@@ -11,6 +11,8 @@ class Subscription {
     this.subs.forEach(sub => sub(store));
   }
 
+  onStateChange() {}
+
 }
 
 export default Subscription;

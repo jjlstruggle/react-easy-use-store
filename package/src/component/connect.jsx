@@ -3,28 +3,30 @@ import Context from "../util/context";
 import { areEqualObj } from "../util/areEqualObj";
 
 function connect(...args) {
-  let lastState = {},
-    shouldUpdate = true;
-  return function (Component) {
-    const context = useContext(Context);
-    const curState = context.getState();
-    const curListenState = {};
-    args.forEach((key) => {
-      curListenState[key] = curState[key];
-    });
-    if (areEqualObj(lastState, Component)) {
-      shouldUpdate = false;
-    }
-    const _Component = <Component {...curListenState} />;
-    let MemoCompoent = memo(_Component, function () {
-      if (shouldUpdate) {
-        lastState = curListenState;
-        return false;
-      }
-      return true;
-    });
-    return MemoCompoent;
+  let lastState = {};
+
+  const wrapConnect = (Component) => {
+    const WrapComponet = (props) => {
+      const context = useContext(Context);
+      const curState = context.getState();
+      const curListenState = {};
+      args.forEach((key) => {
+        curListenState[key] = curState[key];
+      });
+      let MemoCompoent = memo(Component, function (prev, cur) {
+        if (areEqualObj(cur, prev)) {
+          return true;
+        } else {
+          lastState = curListenState;
+          return false;
+        }
+      });
+      return <MemoCompoent {...props} {...curListenState} />;
+    };
+
+    return WrapComponet;
   };
+  return wrapConnect;
 }
 
 export { connect };

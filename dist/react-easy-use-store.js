@@ -21,18 +21,17 @@
         this.subs.forEach(sub => sub(store));
       }
 
-    }
+      onStateChange() {}
 
-    const notifyProviderUpdate = () => {};
+    }
 
     let store = {};
     const subscription = new Subscription();
 
     const setStore = (key, data) => {
-      Object.assign(store, {
-        [key]: data
-      });
+      store[key] = data;
       subscription.notifySubs(store);
+      subscription.onStateChange && subscription.onStateChange();
     };
 
     const getState = () => store;
@@ -40,8 +39,7 @@
     function createStore() {
       return {
         setStore,
-        getState,
-        notifyProviderUpdate
+        getState
       };
     }
 
@@ -146,49 +144,62 @@
       store,
       children
     }) {
-      const [state, setState] = React$1.useState();
-      const previousState = React$1.useMemo(() => store.getState(), [store]);
+      const [state, setState] = React$1.useState(null);
+      const curState = React$1.useMemo(() => store.getState(), [store]);
       React$1.useEffect(() => {
-        if (areEqualObj(state, previousState)) {
-          store.notifyProviderUpdate = () => {};
-
-          return;
+        if (areEqualObj(state, curState)) {
+          subscription.onStateChange = () => {};
+        } else {
+          subscription.onStateChange = () => setState(curState);
         }
-
-        store.notifyProviderUpdate = setState;
-      }, [state]);
+      });
       return /*#__PURE__*/React__default["default"].createElement(Context.Provider, {
         value: store
       }, children);
     }
 
-    function connect(...args) {
-      let lastState = {},
-          shouldUpdate = true;
-      return function (Component) {
-        const context = React$1.useContext(Context);
-        const curState = context.getState();
-        const curListenState = {};
-        args.forEach(key => {
-          curListenState[key] = curState[key];
-        });
+    function _extends() {
+      _extends = Object.assign || function (target) {
+        for (var i = 1; i < arguments.length; i++) {
+          var source = arguments[i];
 
-        if (areEqualObj(lastState, Component)) {
-          shouldUpdate = false;
+          for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+              target[key] = source[key];
+            }
+          }
         }
 
-        const _Component = /*#__PURE__*/React.createElement(Component, curListenState);
-
-        let MemoCompoent = React$1.memo(_Component, function () {
-          if (shouldUpdate) {
-            lastState = curListenState;
-            return false;
-          }
-
-          return true;
-        });
-        return MemoCompoent;
+        return target;
       };
+
+      return _extends.apply(this, arguments);
+    }
+
+    function connect(...args) {
+
+      const wrapConnect = Component => {
+        const WrapComponet = props => {
+          const context = React$1.useContext(Context);
+          const curState = context.getState();
+          const curListenState = {};
+          args.forEach(key => {
+            curListenState[key] = curState[key];
+          });
+          let MemoCompoent = React$1.memo(Component, function (prev, cur) {
+            if (areEqualObj(cur, prev)) {
+              return true;
+            } else {
+              return false;
+            }
+          });
+          return /*#__PURE__*/React.createElement(MemoCompoent, _extends({}, props, curListenState));
+        };
+
+        return WrapComponet;
+      };
+
+      return wrapConnect;
     }
 
     var index = {

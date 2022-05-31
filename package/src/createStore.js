@@ -1,15 +1,12 @@
 import Subscription from "./util/subscription"
 
-const notifyProviderUpdate = () => { }
 let lastStore = {}, store = {}
 const subscription = new Subscription()
-
-
 const setStore = (key, data) => {
     lastStore = store
-    Object.assign(store, { [key]: data })
-    notifyProviderUpdate()
+    store[key] = data
     subscription.notifySubs(store)
+    subscription.onStateChange && subscription.onStateChange()
 }
 const getState = () => store
 
@@ -17,7 +14,6 @@ export default function createStore() {
     return {
         setStore,
         getState,
-        notifyProviderUpdate
     }
 }
 
