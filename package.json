@@ -1,6 +1,6 @@
 {
   "name": "react-easy-use-store",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A small and fast library for managing react state",
   "keywords": [
     "react",
@@ -10,9 +10,9 @@
     "store"
   ],
   "license": "MIT",
-  "main": "./lib/index.js",
-  "unpkg": "dist/react-redux.js",
-  "module": "es/index.js",
+  "main": "./lib/src/index.js",
+  "unpkg": "dist/react-easy-use-store.js",
+  "module": "es/src/index.js",
   "homepage": "https://github.com/jjlstruggle/react-easy-use-store.git",
   "repository": "https://github.com/jjlstruggle/react-easy-use-store.git",
   "files": [
