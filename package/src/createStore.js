@@ -6,7 +6,9 @@ const setStore = (key, data) => {
     lastStore = store
     store[key] = data
     subscription.notifySubs(store)
-    subscription.onStateChange && subscription.onStateChange()
+    if (subscription.onStateChange) {
+        subscription.onStateChange(store)
+    }
 }
 const getState = () => store
 

@@ -6,7 +6,7 @@ class Subscription {
     notifySubs(store) {
         this.subs.forEach(sub => sub(store))
     }
-    onStateChange() { }
+
 }
 
 export default Subscription
