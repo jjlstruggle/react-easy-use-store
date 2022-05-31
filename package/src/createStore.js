@@ -1,5 +1,5 @@
 const notifyProviderUpdate = () => { }
-let lastStore = store = {}
+let lastStore = {}, store = {}
 const setStore = (key, data) => {
     lastStore = store
     Object.assign(store, { [key]: data })
