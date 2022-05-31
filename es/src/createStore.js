@@ -1,6 +1,10 @@
+import Subscription from "./util/subscription";
+
 const notifyProviderUpdate = () => {};
 
-let lastStore = store = {};
+let lastStore = {},
+    store = {};
+const subscription = new Subscription();
 
 const setStore = (key, data) => {
   lastStore = store;
@@ -8,6 +12,7 @@ const setStore = (key, data) => {
     [key]: data
   });
   notifyProviderUpdate();
+  subscription.notifySubs(store);
 };
 
 const getState = () => store;
@@ -19,4 +24,4 @@ export default function createStore() {
     notifyProviderUpdate
   };
 }
-export { setStore };
+export { setStore, subscription };

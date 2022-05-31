@@ -8,15 +8,31 @@
 
     var React__default = /*#__PURE__*/_interopDefaultLegacy(React$1);
 
+    class Subscription {
+      constructor() {
+        this.subs = [];
+      }
+
+      addSub(sub) {
+        this.subs.push(sub);
+      }
+
+      notifySubs(store) {
+        this.subs.forEach(sub => sub(store));
+      }
+
+    }
+
     const notifyProviderUpdate = () => {};
 
-    store = {};
+    let store = {};
+    const subscription = new Subscription();
 
     const setStore = (key, data) => {
-      store;
       Object.assign(store, {
         [key]: data
       });
+      subscription.notifySubs(store);
     };
 
     const getState = () => store;
