@@ -21,8 +21,6 @@
         this.subs.forEach(sub => sub(store));
       }
 
-      onStateChange() {}
-
     }
 
     let store = {};
@@ -31,7 +29,10 @@
     const setStore = (key, data) => {
       store[key] = data;
       subscription.notifySubs(store);
-      subscription.onStateChange && subscription.onStateChange();
+
+      if (subscription.onStateChange) {
+        subscription.onStateChange(store);
+      }
     };
 
     const getState = () => store;
@@ -44,6 +45,46 @@
     }
 
     const Context = React__default["default"].createContext(null);
+
+    const StoreContext = React$1.createContext({});
+
+    function Provider({
+      store,
+      children
+    }) {
+      const isInital = React$1.useRef(true);
+      const [state, setState] = React$1.useState({});
+      React$1.useLayoutEffect(() => {
+        if (isInital.current) {
+          subscription.onStateChange = setState;
+          isInital.current = false;
+          return;
+        }
+      }, []);
+      return /*#__PURE__*/React__default["default"].createElement(Context.Provider, {
+        value: store
+      }, /*#__PURE__*/React__default["default"].createElement(StoreContext.Provider, {
+        value: state
+      }, children));
+    }
+
+    function _extends() {
+      _extends = Object.assign || function (target) {
+        for (var i = 1; i < arguments.length; i++) {
+          var source = arguments[i];
+
+          for (var key in source) {
+            if (Object.prototype.hasOwnProperty.call(source, key)) {
+              target[key] = source[key];
+            }
+          }
+        }
+
+        return target;
+      };
+
+      return _extends.apply(this, arguments);
+    }
 
     function areEqualObj(x, y) {
       let i, l, leftChain, rightChain;
@@ -140,48 +181,11 @@
       return true;
     }
 
-    function Provider({
-      store,
-      children
-    }) {
-      const [state, setState] = React$1.useState(null);
-      const curState = React$1.useMemo(() => store.getState(), [store]);
-      React$1.useEffect(() => {
-        if (areEqualObj(state, curState)) {
-          subscription.onStateChange = () => {};
-        } else {
-          subscription.onStateChange = () => setState(curState);
-        }
-      });
-      return /*#__PURE__*/React__default["default"].createElement(Context.Provider, {
-        value: store
-      }, children);
-    }
-
-    function _extends() {
-      _extends = Object.assign || function (target) {
-        for (var i = 1; i < arguments.length; i++) {
-          var source = arguments[i];
-
-          for (var key in source) {
-            if (Object.prototype.hasOwnProperty.call(source, key)) {
-              target[key] = source[key];
-            }
-          }
-        }
-
-        return target;
-      };
-
-      return _extends.apply(this, arguments);
-    }
-
     function connect(...args) {
 
       const wrapConnect = Component => {
         const WrapComponet = props => {
-          const context = React$1.useContext(Context);
-          const curState = context.getState();
+          const curState = React$1.useContext(StoreContext);
           const curListenState = {};
           args.forEach(key => {
             curListenState[key] = curState[key];

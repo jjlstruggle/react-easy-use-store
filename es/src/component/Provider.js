@@ -1,24 +1,28 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef, useLayoutEffect } from "react";
 import { Context } from "../util/context";
-import { areEqualObj } from "../util/areEqualObj";
 import { subscription } from "../createStore";
+import { createContext } from "react";
+const StoreContext = createContext({});
 
 function Provider({
   store,
   children
 }) {
-  const [state, setState] = useState(null);
-  const curState = useMemo(() => store.getState(), [store]);
-  useEffect(() => {
-    if (areEqualObj(state, curState)) {
-      subscription.onStateChange = () => {};
-    } else {
-      subscription.onStateChange = () => setState(curState);
+  const isInital = useRef(true);
+  const [state, setState] = useState({});
+  useLayoutEffect(() => {
+    if (isInital.current) {
+      subscription.onStateChange = setState;
+      isInital.current = false;
+      return;
     }
-  });
+  }, []);
   return /*#__PURE__*/React.createElement(Context.Provider, {
     value: store
-  }, children);
+  }, /*#__PURE__*/React.createElement(StoreContext.Provider, {
+    value: state
+  }, children));
 }
 
 export default Provider;
+export { StoreContext };

@@ -1,6 +1,6 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
 import { memo, useContext } from "react";
-import Context from "../util/context";
+import { StoreContext } from "./Provider";
 import { areEqualObj } from "../util/areEqualObj";
 
 function connect(...args) {
@@ -8,8 +8,7 @@ function connect(...args) {
 
   const wrapConnect = Component => {
     const WrapComponet = props => {
-      const context = useContext(Context);
-      const curState = context.getState();
+      const curState = useContext(StoreContext);
       const curListenState = {};
       args.forEach(key => {
         curListenState[key] = curState[key];
