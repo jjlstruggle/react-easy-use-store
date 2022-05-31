@@ -142,7 +142,7 @@
         store.notifyProviderUpdate = setState;
       }, [state]);
       return /*#__PURE__*/React__default["default"].createElement(Context.Provider, {
-        value: contextValue
+        value: store
       }, children);
     }
 
@@ -175,9 +175,17 @@
       };
     }
 
+    var index = {
+      createStore,
+      connect,
+      Provider,
+      setStore
+    };
+
     exports.Provider = Provider;
     exports.connect = connect;
     exports.createStore = createStore;
+    exports["default"] = index;
     exports.setStore = setStore;
 
     Object.defineProperty(exports, '__esModule', { value: true });

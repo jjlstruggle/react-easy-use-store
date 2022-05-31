@@ -12,7 +12,7 @@ function Provider({ store, children }) {
     store.notifyProviderUpdate = setState;
   }, [state]);
 
-  return <Context.Provider value={contextValue}>{children}</Context.Provider>;
+  return <Context.Provider value={store}>{children}</Context.Provider>;
 }
 
 export default Provider;

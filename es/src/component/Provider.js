@@ -18,7 +18,7 @@ function Provider({
     store.notifyProviderUpdate = setState;
   }, [state]);
   return /*#__PURE__*/React.createElement(Context.Provider, {
-    value: contextValue
+    value: store
   }, children);
 }
 
