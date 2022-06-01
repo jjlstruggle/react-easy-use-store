@@ -1,12 +1,5 @@
-import React, {
-  useEffect,
-  useMemo,
-  useState,
-  useRef,
-  useLayoutEffect,
-} from "react";
+import React, { useState, useRef, useLayoutEffect } from "react";
 import { Context } from "../util/context";
-import { subscription } from "../createStore";
 import { createContext } from "react";
 
 const StoreContext = createContext({});
@@ -14,7 +7,7 @@ const StoreContext = createContext({});
 function Provider({ store, children }) {
   const isInital = useRef(true);
   const [state, setState] = useState({});
-
+  const { subscription } = store;
   useLayoutEffect(() => {
     if (isInital.current) {
       subscription.onStateChange = setState;

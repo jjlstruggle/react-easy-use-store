@@ -2,11 +2,11 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react')) :
     typeof define === 'function' && define.amd ? define(['exports', 'react'], factory) :
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.ReactEasyUseStore = {}, global.React));
-})(this, (function (exports, React$1) { 'use strict';
+})(this, (function (exports, React) { 'use strict';
 
     function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
-    var React__default = /*#__PURE__*/_interopDefaultLegacy(React$1);
+    var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
 
     class Subscription {
       constructor() {
@@ -23,38 +23,42 @@
 
     }
 
-    let store = {};
     const subscription = new Subscription();
-
-    const setStore = (key, data) => {
-      store[key] = data;
-      subscription.notifySubs(store);
-
-      if (subscription.onStateChange) {
-        subscription.onStateChange(store);
-      }
-    };
-
-    const getState = () => store;
-
     function createStore() {
+      let store = {};
+
+      const getState = () => store;
+
+      const setStore = (key, data) => {
+        store[key] = data;
+        subscription.notifySubs(store);
+
+        if (subscription.onStateChange) {
+          subscription.onStateChange(store);
+        }
+      };
+
       return {
         setStore,
-        getState
+        getState,
+        subscription
       };
     }
 
     const Context = React__default["default"].createContext(null);
 
-    const StoreContext = React$1.createContext({});
+    const StoreContext = React.createContext({});
 
     function Provider({
       store,
       children
     }) {
-      const isInital = React$1.useRef(true);
-      const [state, setState] = React$1.useState({});
-      React$1.useLayoutEffect(() => {
+      const isInital = React.useRef(true);
+      const [state, setState] = React.useState({});
+      const {
+        subscription
+      } = store;
+      React.useLayoutEffect(() => {
         if (isInital.current) {
           subscription.onStateChange = setState;
           isInital.current = false;
@@ -185,19 +189,19 @@
 
       const wrapConnect = Component => {
         const WrapComponet = props => {
-          const curState = React$1.useContext(StoreContext);
+          const curState = React.useContext(StoreContext);
           const curListenState = {};
           args.forEach(key => {
             curListenState[key] = curState[key];
           });
-          let MemoCompoent = React$1.memo(Component, function (prev, cur) {
+          let MemoCompoent = React.memo(Component, function (prev, cur) {
             if (areEqualObj(cur, prev)) {
               return true;
             } else {
               return false;
             }
           });
-          return /*#__PURE__*/React.createElement(MemoCompoent, _extends({}, props, curListenState));
+          return /*#__PURE__*/React__default["default"].createElement(MemoCompoent, _extends({}, props, curListenState));
         };
 
         return WrapComponet;
@@ -206,18 +210,32 @@
       return wrapConnect;
     }
 
+    function useSetStorer() {
+      return React.useContext(Context).setStore;
+    }
+
+    const useSelector = (...args) => {
+      const [state, setState] = React.useState([]);
+      React.useEffect(() => {
+        subscription.addSub(setState);
+      }, []);
+      return args.map(key => state[key]);
+    };
+
     var index = {
       createStore,
       connect,
       Provider,
-      setStore
+      useSetStorer,
+      useSelector
     };
 
     exports.Provider = Provider;
     exports.connect = connect;
     exports.createStore = createStore;
     exports["default"] = index;
-    exports.setStore = setStore;
+    exports.useSelector = useSelector;
+    exports.useSetStorer = useSetStorer;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

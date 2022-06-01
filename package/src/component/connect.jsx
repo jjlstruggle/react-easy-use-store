@@ -1,4 +1,4 @@
-import { memo, useContext } from "react";
+import React, { memo, useContext } from "react";
 import { StoreContext } from "./Provider";
 import { areEqualObj } from "../util/areEqualObj";
 

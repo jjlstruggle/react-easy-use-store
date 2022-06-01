@@ -1,5 +1,7 @@
 # _react-easy-use-store_
 
+扁平化管理你的数据
+
 ## install
 
 > npm i react-easy-use-store or yarn add react-easy-use-store
@@ -26,9 +28,11 @@ root.render(
 
 ```js
 import React,{useEffect} from "react";
-import { setStore, connect } from "react-easy-use-store";
+import { useSetStorer, connect } from "react-easy-use-store";
 
 function Counter({count}) {
+
+  const setStore = useSetStorer()
 
   useEffect(()=>{
       console.log(count)

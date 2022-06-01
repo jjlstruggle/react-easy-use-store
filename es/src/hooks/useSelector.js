@@ -8,3 +8,5 @@ const useSelector = (...args) => {
   }, []);
   return args.map(key => state[key]);
 };
+
+export default useSelector;
