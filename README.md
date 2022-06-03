@@ -8,13 +8,20 @@
 
 ## easy use
 
-### Provider
+### Provider initalState
 
 ```js
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider, createStore } from "react-easy-use-store";
 import App from "./App";
+
+const initalState = {
+    test:'foo',
+    bar:'bar'
+}
+
+const store = createStore(initalState)
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -24,13 +31,13 @@ root.render(
 );
 ```
 
-### setStore connect
+### setStore connect 
 
 ```js
 import React,{useEffect} from "react";
 import { useSetStorer, connect } from "react-easy-use-store";
 
-function Counter({count}) {
+function Counter({count,test}) {
 
   const setStore = useSetStorer()
 
@@ -44,12 +51,11 @@ function Counter({count}) {
 
   return (
     <div>
-      <div>
         {count}
-      </div>
+        {test}
     </div>
   );
 }
 
-export connect('count')(Counter)
+export connect('count','test')(Counter)
 ```
