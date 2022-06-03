@@ -2,9 +2,9 @@ import Subscription from "./util/subscription"
 const subscription = new Subscription()
 
 
-export default function createStore() {
+export default function createStore(initalStore = {}) {
 
-    let lastStore = {}, store = {}
+    let lastStore = initalStore, store = initalStore
     const getState = () => store
     const setStore = (key, data) => {
         lastStore = store
