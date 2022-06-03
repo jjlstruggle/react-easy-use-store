@@ -24,8 +24,8 @@
     }
 
     const subscription = new Subscription();
-    function createStore() {
-      let store = {};
+    function createStore(initalStore = {}) {
+      let store = initalStore;
 
       const getState = () => store;
 

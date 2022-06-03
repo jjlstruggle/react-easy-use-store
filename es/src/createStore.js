@@ -1,8 +1,8 @@
 import Subscription from "./util/subscription";
 const subscription = new Subscription();
-export default function createStore() {
-  let lastStore = {},
-      store = {};
+export default function createStore(initalStore = {}) {
+  let lastStore = initalStore,
+      store = initalStore;
 
   const getState = () => store;
 
